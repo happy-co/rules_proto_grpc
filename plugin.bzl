@@ -10,7 +10,8 @@ ProtoPluginInfo = provider(fields = {
     "protoc_plugin_name": "The name used for the plugin binary on the protoc command line. Useful for targeting built-in plugins. Uses plugin name when not set",
     "exclusions": "Exclusion filters to apply when generating outputs with this plugin. Used to prevent generating files that are included in the protobuf library, for example. Can exclude either by proto name prefix or by proto folder prefix",
     "data": "Additional files required for running the plugin",
-    "separate_options_flag": "Flag to indicate if plugin options should be sent via the --{lang}_opts flag"
+    "separate_options_flag": "Flag to indicate if plugin options should be sent via the --{lang}_opts flag",
+    "feature": "Require feature to be set on source to apply this plugin"
 })
 
 
@@ -29,6 +30,7 @@ def _proto_plugin_impl(ctx):
             exclusions = ctx.attr.exclusions,
             data = ctx.files.data,
             separate_options_flag = ctx.attr.separate_options_flag,
+            feature = ctx.attr.require_feature,
         )
     ]
 
@@ -64,6 +66,9 @@ proto_plugin = rule(
         ),
         "exclusions": attr.string_list(
             doc = "Exclusion filters to apply when generating outputs with this plugin. Used to prevent generating files that are included in the protobuf library, for example. Can exclude either by proto name prefix or by proto folder prefix",
+        ),
+        "require_feature": attr.string(
+            doc = "Require feature to be set on source proto_library to apply this plugin",
         ),
         "data": attr.label_list(
             doc = "Additional files required for running the plugin",

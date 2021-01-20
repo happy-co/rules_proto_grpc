@@ -229,6 +229,12 @@ def proto_compile_aspect_impl(target, ctx):
     # execution for all plugins
 
     for plugin in plugins:
+        # check if plugin should apply to target
+        if plugin.feature and plugin.feature not in ctx.rule.attr.features:
+            if verbose > 2:
+                print('Skipping plugin "{}" for "{}" as feature {} was not present'.format(plugin.name, ctx.label, plugin.feature))
+            continue
+
         ###
         ### Part 2.1: fetch plugin tool and runfiles
         ###
